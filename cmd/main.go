@@ -7,6 +7,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/qazaqpyn/webping/pkg/csvreader"
 	"github.com/qazaqpyn/webping/pkg/workerpool"
 )
 
@@ -16,22 +17,14 @@ const (
 	WORKER_COUNT    = 10
 )
 
-var ulrs = []string{
-	"https://www.google.com",
-	"https://www.facebook.com",
-	"https://www.youtube.com",
-	"https://www.yahoo.com",
-	"https://www.wikipedia.org",
-	"https://www.baidu.com",
-	"https://www.amazon.com",
-	"https://www.qq.com",
-	"https://www.google.co.in",
-	"https://www.twitter.com",
-	"https://www.live.com",
-	"https://www.taobao.com",
-}
-
 func main() {
+	// read urls from csv file
+	urls, err := csvreader.ReadCsvFile("./assets/websites.csv")
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
 	results := make(chan workerpool.Result)
 	workerPool := workerpool.NewPool(WORKER_COUNT, REQUEST_TIMEOUT, results)
 
@@ -39,7 +32,7 @@ func main() {
 	workerPool.Init()
 
 	// generate jobs
-	go generateJobs(workerPool)
+	go generateJobs(workerPool, urls)
 
 	//processResults runnnig in background
 	go processResults(results)
@@ -52,9 +45,9 @@ func main() {
 	workerPool.Stop()
 }
 
-func generateJobs(workerPool *workerpool.Pool) {
+func generateJobs(workerPool *workerpool.Pool, urls []string) {
 	for {
-		for _, url := range ulrs {
+		for _, url := range urls {
 			workerPool.Push(workerpool.Job{URL: url})
 		}
 		time.Sleep(INTERVAL)

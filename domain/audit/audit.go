@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	SPECIFIC_WEB = iota
+	SPECIFIC_WEB = iota + 1
 	MAX_RESPONSE_TIME
 	MIN_RESPONSE_TIME
 )
@@ -17,6 +17,11 @@ type Audit struct {
 	requestType  int
 	url          string
 	ResponseTime time.Duration
+}
+
+type MongoAuditGroup struct {
+	ID    int
+	Total int
 }
 
 func NewAudit(requestType int, url string, ResponseTime time.Duration) *Audit {

@@ -18,10 +18,6 @@ func (s *resultService) AddResult(url string, result results.Result) error {
 	return nil
 }
 
-func (s *resultService) CheckWebExist(url string) bool {
-	return s.resultRepo.CheckWebExist(url)
-}
-
 func (s *resultService) GetResult(url string) results.Result {
 	return s.resultRepo.GetResult(url)
 }

@@ -14,7 +14,7 @@ import (
 
 type Audit interface {
 	Create(ctx context.Context, requestType int, url string, ResponseTime time.Duration) (*audit.Audit, error)
-	GetAll(ctx context.Context) ([]*audit.Audit, error)
+	GetAll(ctx context.Context) ([]*audit.MongoAuditGroup, error)
 	GetByRequestType(ctx context.Context, requestType int) ([]*audit.Audit, error)
 }
 
@@ -23,7 +23,6 @@ type Results interface {
 	GetResult(url string) results.Result
 	MaxResponseTime() (string, results.Result)
 	MinResponseTime() (string, results.Result)
-	CheckWebExist(url string) bool
 }
 
 type Auth interface {

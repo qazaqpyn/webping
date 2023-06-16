@@ -22,7 +22,7 @@ func ReadCsvFile(path string) ([]string, error) {
 	}
 
 	for _, row := range data {
-		urls = append(urls, row[0])
+		urls = append(urls, "https://"+row[0])
 	}
 
 	return urls, nil

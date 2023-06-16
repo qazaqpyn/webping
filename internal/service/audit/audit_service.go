@@ -27,7 +27,7 @@ func (s *AuditService) Create(ctx context.Context, requestType int, url string, 
 	return newUser, nil
 }
 
-func (s *AuditService) GetAll(ctx context.Context) ([]*audit.Audit, error) {
+func (s *AuditService) GetAll(ctx context.Context) ([]*audit.MongoAuditGroup, error) {
 	return s.auditRepo.Find(ctx)
 }
 

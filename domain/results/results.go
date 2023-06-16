@@ -45,11 +45,6 @@ func (r *Results) GetResult(url string) Result {
 	}
 }
 
-func (r *Results) CheckWebExist(url string) bool {
-	// list
-	return true
-}
-
 func (r *Results) MaxResponseTime() (url string, result Result) {
 	for k, v := range r.Results {
 		if result.ResponseTime < v.ResponseTime {

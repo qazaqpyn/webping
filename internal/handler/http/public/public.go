@@ -5,16 +5,21 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/qazaqpyn/webping/domain/websites"
 	"github.com/qazaqpyn/webping/internal/handler/http/response"
 	"github.com/qazaqpyn/webping/internal/service"
 )
 
 type HttpDelivery struct {
 	resultsService service.Results
+	websites       *websites.Websites
 }
 
-func NewHttpDelivery(resultsService service.Results) *HttpDelivery {
-	return &HttpDelivery{resultsService: resultsService}
+func NewHttpDelivery(resultsService service.Results, websites *websites.Websites) *HttpDelivery {
+	return &HttpDelivery{
+		resultsService: resultsService,
+		websites:       websites,
+	}
 }
 
 type WebsiteRequest struct {
@@ -28,7 +33,7 @@ func (h *HttpDelivery) GetRequestTime(c *gin.Context) {
 		return
 	}
 
-	ok := h.resultsService.CheckWebExist(r.Url)
+	ok := h.websites.CheckWebExist(r.Url)
 	if !ok {
 		c.AbortWithStatusJSON(http.StatusBadRequest, response.ErrorResponse("Website not pinged yet"))
 		return

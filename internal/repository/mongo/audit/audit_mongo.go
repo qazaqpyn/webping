@@ -11,16 +11,13 @@ import (
 )
 
 type RepoAudit struct {
-	client mongo.Client
-	col    *mongo.Collection
+	col *mongo.Collection
 }
 
-func NewRepoAudit(client mongo.Client) *RepoAudit {
-	return &RepoAudit{client: client}
-}
-
-func (r *RepoAudit) Coll() *mongo.Collection {
-	return r.client.Database("main").Collection("audit")
+func NewRepoAudit(db *mongo.Database, coll string) *RepoAudit {
+	return &RepoAudit{
+		col: db.Collection(coll),
+	}
 }
 
 type mongoAudit struct {
@@ -29,6 +26,11 @@ type mongoAudit struct {
 	URL          string        `bson:"url"`
 	ResponseTime time.Duration `bson:"response_time"`
 	CreatedAt    time.Time     `bson:"created_at"`
+}
+
+type mongoAuditGroup struct {
+	ID    int `bson:"_id"`
+	Total int `bson:"total"`
 }
 
 func newFromAudit(audit *audit.Audit) *mongoAudit {
@@ -46,28 +48,37 @@ func (r *RepoAudit) Create(ctx context.Context, audit *audit.Audit) error {
 	return err
 }
 
-func (r *RepoAudit) Find(ctx context.Context) ([]*audit.Audit, error) {
-	cur, err := r.Coll().Find(ctx, bson.D{})
+func (r *RepoAudit) Find(ctx context.Context) ([]*audit.MongoAuditGroup, error) {
+	// agregate by request type and get total number of requests
+	cur, err := r.col.Aggregate(ctx, mongo.Pipeline{
+		bson.D{{Key: "$group", Value: bson.D{
+			{Key: "request_type", Value: "$request_type"},
+			{Key: "total", Value: bson.D{{Key: "$sum", Value: 1}}},
+		}}},
+	})
 	if err != nil {
 		return nil, err
 	}
 	defer cur.Close(ctx)
 
-	var results []*audit.Audit
+	var results []*audit.MongoAuditGroup
 	for cur.Next(ctx) {
-		var result mongoAudit
+		var result mongoAuditGroup
 		if err := cur.Decode(&result); err != nil {
 			return nil, err
 		}
 
-		results = append(results, audit.NewAudit(result.RequestType, result.URL, result.ResponseTime))
+		results = append(results, &audit.MongoAuditGroup{
+			ID:    result.ID,
+			Total: result.Total,
+		})
 	}
 
 	return results, nil
 }
 
 func (r *RepoAudit) FindByRequestType(ctx context.Context, requestType int) ([]*audit.Audit, error) {
-	cur, err := r.Coll().Find(ctx, bson.D{{Key: "request_type", Value: requestType}})
+	cur, err := r.col.Find(ctx, bson.D{{Key: "request_type", Value: requestType}})
 	if err != nil {
 		return nil, err
 	}

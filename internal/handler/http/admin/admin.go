@@ -48,7 +48,7 @@ func (h *HttpDelivery) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, data)
 }
 
-func (h *HttpDelivery) GetWebStatistics(c *gin.Context) {
+func (h *HttpDelivery) GetWebList(c *gin.Context) {
 	stat, err := h.auditService.GetByRequestType(c, audit.SPECIFIC_WEB)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, response.ErrorResponse(err.Error()))
@@ -67,7 +67,7 @@ func (h *HttpDelivery) GetWebStatistics(c *gin.Context) {
 	c.JSON(http.StatusOK, data)
 }
 
-func (h *HttpDelivery) GetMinStatistics(c *gin.Context) {
+func (h *HttpDelivery) GetMinList(c *gin.Context) {
 	stat, err := h.auditService.GetByRequestType(c, audit.MIN_RESPONSE_TIME)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, response.ErrorResponse(err.Error()))
@@ -86,7 +86,7 @@ func (h *HttpDelivery) GetMinStatistics(c *gin.Context) {
 	c.JSON(http.StatusOK, data)
 }
 
-func (h *HttpDelivery) GetMaxStatistics(c *gin.Context) {
+func (h *HttpDelivery) GetMaxList(c *gin.Context) {
 	stat, err := h.auditService.GetByRequestType(c, audit.MAX_RESPONSE_TIME)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, response.ErrorResponse(err.Error()))

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/qazaqpyn/webping/domain/websites"
 	"github.com/qazaqpyn/webping/internal/handler/http/admin"
 	"github.com/qazaqpyn/webping/internal/handler/http/middleware"
 	"github.com/qazaqpyn/webping/internal/handler/http/public"
@@ -13,10 +14,10 @@ type Handler struct {
 	Public *public.HttpDelivery
 }
 
-func NewHandler(services *service.Service) *Handler {
+func NewHandler(services *service.Service, websites *websites.Websites) *Handler {
 	return &Handler{
 		Admin:  admin.NewHttpDelivery(services.Audit, services.Auth),
-		Public: public.NewHttpDelivery(services.Results),
+		Public: public.NewHttpDelivery(services.Results, websites),
 	}
 }
 
@@ -31,14 +32,14 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		authentication.Use(middleware.AdminIdentityMiddleware(h.Admin.AuthService))
 		{
 			authentication.GET("/statisticAll", h.Admin.GetAllStatistics)
-			authentication.GET("/webStatistic", h.Admin.GetWebStatistics)
-			authentication.GET("/minStatistic", h.Admin.GetMinStatistics)
-			authentication.GET("/maxStatistic", h.Admin.GetMaxStatistics)
+			authentication.GET("/webList", h.Admin.GetWebList)
+			authentication.GET("/minList", h.Admin.GetMinList)
+			authentication.GET("/maxList", h.Admin.GetMaxList)
 		}
 
 		api.POST("/requestTime", h.Public.GetRequestTime)
 		api.POST("/maxResponseTime", h.Public.GetMaxResponseTime)
-		api.POST("/minResponseTime", h.Admin.GetMinStatistics)
+		api.POST("/minResponseTime", h.Public.GetMinResponseTime)
 	}
 	return router
 }

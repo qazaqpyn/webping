@@ -3,7 +3,6 @@ package mongo
 import (
 	"context"
 	"errors"
-	"log"
 	"os"
 	"time"
 
@@ -31,7 +30,6 @@ func NewMongodb(db string) (*mongo.Database, error) {
 	defer cancel()
 
 	err = client.Ping(ctx, nil)
-	log.Print(err)
 	if err != nil {
 		return nil, err
 	}

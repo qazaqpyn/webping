@@ -17,6 +17,20 @@ import (
 	"github.com/spf13/viper"
 )
 
+//	@title			WEBPING
+//	@version		1.0
+//	@description	A program that checks the list of sites for availability and return API responses
+
+//	@contact.name	API Support
+//	@contact.email	alimkali.alizhan@gmail.com
+
+//	@host		localhost:8080
+//	@BasePath	/
+
+// @securityDefinitions.apikey	ApiKeyAuth
+// @in							header
+// @name						Authorization
+// @description				 Add: bearer <token>
 func main() {
 	// init config
 	if err := initConfig(); err != nil {

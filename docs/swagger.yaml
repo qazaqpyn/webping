@@ -1,0 +1,287 @@
+basePath: /
+definitions:
+  admin.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  public.WebsiteRequest:
+    properties:
+      url:
+        type: string
+    type: object
+  response.ResponseType:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: alimkali.alizhan@gmail.com
+    name: API Support
+  description: A program that checks the list of sites for availability and return
+    API responses
+  title: WEBPING
+  version: "1.0"
+paths:
+  /api/admin/maxList:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all API reqeusts from users to maximum response time
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+      security:
+      - ApiKeyAuth: []
+      summary: GetMaxList
+      tags:
+      - Admin
+  /api/admin/minList:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all API reqeusts from users to minimum response time
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+      security:
+      - ApiKeyAuth: []
+      summary: GetMinList
+      tags:
+      - Admin
+  /api/admin/statisticAll:
+    get:
+      consumes:
+      - application/json
+      description: 'Get list of all API reqeusts from users (ID=1 : specific website,
+        ID=2 : maximum response time, ID=3 : minimum response time)'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+      security:
+      - ApiKeyAuth: []
+      summary: GetAllStatistics
+      tags:
+      - Admin
+  /api/admin/webList:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all API reqeusts from users to specific website
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+      security:
+      - ApiKeyAuth: []
+      summary: GetWebList
+      tags:
+      - Admin
+  /api/login:
+    post:
+      consumes:
+      - application/json
+      description: Login with Admin credentials
+      parameters:
+      - description: admin credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/admin.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+      summary: Login
+      tags:
+      - Admin
+  /api/maxResponseTime:
+    post:
+      consumes:
+      - application/json
+      description: Get max response time from all websites
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+      summary: GetMaxResponseTime
+      tags:
+      - Public
+  /api/minResponseTime:
+    post:
+      consumes:
+      - application/json
+      description: Get min response time from all websites
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+      summary: GetMinResponseTime
+      tags:
+      - Public
+  /api/requestTime:
+    post:
+      consumes:
+      - application/json
+      description: Get request time for specific website
+      parameters:
+      - description: website url
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/public.WebsiteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseType'
+      summary: GetRequestTime
+      tags:
+      - Public
+securityDefinitions:
+  ApiKeyAuth:
+    description: 'Add: bearer <token>'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

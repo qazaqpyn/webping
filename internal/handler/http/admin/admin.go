@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -24,6 +23,17 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
+// @Summary Login
+// @Description	Login with Admin credentials
+// @Tags Admin
+// @Accept json
+// @Produce	json
+// @Param input body LoginRequest true "admin credentials"
+// @Success	200	{object} map[string]string
+// @Failure	400 {object} response.ResponseType
+// @Failure	404	{object}	response.ResponseType
+// @Failure	500	{object} response.ResponseType
+// @Router /api/login [post]
 func (h *HttpDelivery) Login(c *gin.Context) {
 	r := LoginRequest{}
 	if err := c.BindJSON(&r); err != nil {
@@ -42,6 +52,17 @@ func (h *HttpDelivery) Login(c *gin.Context) {
 	})
 }
 
+// @Summary GetWebList
+// @Description	Get list of all API reqeusts from users to specific website
+// @Security ApiKeyAuth
+// @Tags Admin
+// @Accept json
+// @Produce	json
+// @Success	200	{object} map[string]interface{}
+// @Failure	400 {object} response.ResponseType
+// @Failure	404	{object}	response.ResponseType
+// @Failure	500	{object} response.ResponseType
+// @Router /api/admin/webList [get]
 func (h *HttpDelivery) GetWebList(c *gin.Context) {
 	stat, err := h.auditService.GetByRequestType(c, audit.SPECIFIC_WEB)
 	if err != nil {
@@ -55,6 +76,17 @@ func (h *HttpDelivery) GetWebList(c *gin.Context) {
 	})
 }
 
+// @Summary GetMinList
+// @Description	Get list of all API reqeusts from users to minimum response time
+// @Security ApiKeyAuth
+// @Tags Admin
+// @Accept json
+// @Produce	json
+// @Success	200	{object} map[string]interface{}
+// @Failure	400 {object} response.ResponseType
+// @Failure	404	{object}	response.ResponseType
+// @Failure	500	{object} response.ResponseType
+// @Router /api/admin/minList [get]
 func (h *HttpDelivery) GetMinList(c *gin.Context) {
 	stat, err := h.auditService.GetByRequestType(c, audit.MIN_RESPONSE_TIME)
 	if err != nil {
@@ -68,6 +100,17 @@ func (h *HttpDelivery) GetMinList(c *gin.Context) {
 	})
 }
 
+// @Summary GetMaxList
+// @Description	Get list of all API reqeusts from users to maximum response time
+// @Security ApiKeyAuth
+// @Tags Admin
+// @Accept json
+// @Produce	json
+// @Success	200	{object} map[string]interface{}
+// @Failure	400 {object} response.ResponseType
+// @Failure	404	{object}	response.ResponseType
+// @Failure	500	{object} response.ResponseType
+// @Router /api/admin/maxList [get]
 func (h *HttpDelivery) GetMaxList(c *gin.Context) {
 	stat, err := h.auditService.GetByRequestType(c, audit.MAX_RESPONSE_TIME)
 	if err != nil {
@@ -81,9 +124,19 @@ func (h *HttpDelivery) GetMaxList(c *gin.Context) {
 	})
 }
 
+// @Summary GetAllStatistics
+// @Description	Get list of all API reqeusts from users (ID=1 : specific website, ID=2 : maximum response time, ID=3 : minimum response time)
+// @Security ApiKeyAuth
+// @Tags Admin
+// @Accept json
+// @Produce	json
+// @Success	200	{object} map[string]interface{}
+// @Failure	400 {object} response.ResponseType
+// @Failure	404	{object}	response.ResponseType
+// @Failure	500	{object} response.ResponseType
+// @Router /api/admin/statisticAll [get]
 func (h *HttpDelivery) GetAllStatistics(c *gin.Context) {
 	stat, err := h.auditService.GetAll(c)
-	log.Println(stat, err)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, response.ErrorResponse(err.Error()))
 		return

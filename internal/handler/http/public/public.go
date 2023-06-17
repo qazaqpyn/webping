@@ -29,6 +29,17 @@ type WebsiteRequest struct {
 	Url string `json:"url"`
 }
 
+// @Summary GetRequestTime
+// @Description	Get request time for specific website
+// @Tags Public
+// @Accept json
+// @Produce	json
+// @Param input body WebsiteRequest true "website url"
+// @Success	200	{object} map[string]interface{}
+// @Failure	400 {object} response.ResponseType
+// @Failure	404	{object}	response.ResponseType
+// @Failure	500	{object} response.ResponseType
+// @Router /api/requestTime [post]
 func (h *HttpDelivery) GetRequestTime(c *gin.Context) {
 	r := WebsiteRequest{}
 	if err := c.BindJSON(&r); err != nil {
@@ -57,6 +68,16 @@ func (h *HttpDelivery) GetRequestTime(c *gin.Context) {
 	})
 }
 
+// @Summary GetMaxResponseTime
+// @Description	Get max response time from all websites
+// @Tags Public
+// @Accept json
+// @Produce	json
+// @Success	200	{object} map[string]interface{}
+// @Failure	400 {object} response.ResponseType
+// @Failure	404	{object}	response.ResponseType
+// @Failure	500	{object} response.ResponseType
+// @Router /api/maxResponseTime [post]
 func (h *HttpDelivery) GetMaxResponseTime(c *gin.Context) {
 	url, stat := h.resultsService.MaxResponseTime()
 	stat.ResponseTime = stat.ResponseTime / 1000000
@@ -74,6 +95,16 @@ func (h *HttpDelivery) GetMaxResponseTime(c *gin.Context) {
 	})
 }
 
+// @Summary GetMinResponseTime
+// @Description	Get min response time from all websites
+// @Tags Public
+// @Accept json
+// @Produce	json
+// @Success	200	{object} map[string]interface{}
+// @Failure	400 {object} response.ResponseType
+// @Failure	404	{object}	response.ResponseType
+// @Failure	500	{object} response.ResponseType
+// @Router /api/minResponseTime [post]
 func (h *HttpDelivery) GetMinResponseTime(c *gin.Context) {
 	url, stat := h.resultsService.MinResponseTime()
 	stat.ResponseTime = stat.ResponseTime / 1000000

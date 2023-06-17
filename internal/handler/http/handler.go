@@ -2,11 +2,14 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	_ "github.com/qazaqpyn/webping/docs"
 	"github.com/qazaqpyn/webping/domain/websites"
 	"github.com/qazaqpyn/webping/internal/handler/http/admin"
 	"github.com/qazaqpyn/webping/internal/handler/http/middleware"
 	"github.com/qazaqpyn/webping/internal/handler/http/public"
 	"github.com/qazaqpyn/webping/internal/service"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Handler struct {
@@ -23,6 +26,8 @@ func NewHandler(services *service.Service, websites *websites.Websites) *Handler
 
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.Default()
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	api := router.Group("/api")
 	{

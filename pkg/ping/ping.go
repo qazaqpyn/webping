@@ -56,3 +56,7 @@ func (h *Ping) ProcessResults() {
 		}
 	}()
 }
+
+func (h *Ping) Stop() {
+	h.workerPool.Stop()
+}

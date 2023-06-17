@@ -77,7 +77,7 @@ func main() {
 
 	<-quit
 
-	// workerPool.Stop()
+	ping.Stop()
 
 	if err := srv.Shutdown(context.Background()); err != nil {
 		log.Fatalf("error occured on server shutting down: %s", err.Error())

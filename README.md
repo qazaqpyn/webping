@@ -9,6 +9,12 @@ Users have 3 query options (endpoints):
 
 Administrators get statistics on user requests for the three above endpoints.
 
+## Technologies 
+- JWT Authentication 
+- Swagger
+- Worker Pool
+- Graceful Shutdown
+
 ## Before run 
 1. start mongodb in docker 
 

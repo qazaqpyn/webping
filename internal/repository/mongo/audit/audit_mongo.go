@@ -51,10 +51,12 @@ func (r *RepoAudit) Create(ctx context.Context, audit *audit.Audit) error {
 func (r *RepoAudit) Find(ctx context.Context) ([]*audit.MongoAuditGroup, error) {
 	// agregate by request type and get total number of requests
 	cur, err := r.col.Aggregate(ctx, mongo.Pipeline{
-		bson.D{{Key: "$group", Value: bson.D{
-			{Key: "request_type", Value: "$request_type"},
-			{Key: "total", Value: bson.D{{Key: "$sum", Value: 1}}},
-		}}},
+		bson.D{
+			{Key: "$group", Value: bson.D{
+				{Key: "_id", Value: "$request_type"},
+				{Key: "total", Value: bson.D{{Key: "$sum", Value: 1}}},
+			}},
+		},
 	})
 	if err != nil {
 		return nil, err
@@ -77,21 +79,26 @@ func (r *RepoAudit) Find(ctx context.Context) ([]*audit.MongoAuditGroup, error) 
 	return results, nil
 }
 
-func (r *RepoAudit) FindByRequestType(ctx context.Context, requestType int) ([]*audit.Audit, error) {
+func (r *RepoAudit) FindByRequestType(ctx context.Context, requestType int) ([]*audit.MongoAuditResp, error) {
 	cur, err := r.col.Find(ctx, bson.D{{Key: "request_type", Value: requestType}})
 	if err != nil {
 		return nil, err
 	}
 	defer cur.Close(ctx)
 
-	var results []*audit.Audit
+	var results []*audit.MongoAuditResp
 	for cur.Next(ctx) {
 		var result mongoAudit
 		if err := cur.Decode(&result); err != nil {
 			return nil, err
 		}
 
-		results = append(results, audit.NewAudit(result.RequestType, result.URL, result.ResponseTime))
+		results = append(results, &audit.MongoAuditResp{
+			RequestType:  result.RequestType,
+			URL:          result.URL,
+			ResponseTime: result.ResponseTime,
+			CreatedAt:    result.CreatedAt,
+		})
 	}
 
 	return results, nil

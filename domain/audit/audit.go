@@ -24,6 +24,13 @@ type MongoAuditGroup struct {
 	Total int
 }
 
+type MongoAuditResp struct {
+	RequestType  int
+	URL          string
+	ResponseTime time.Duration
+	CreatedAt    time.Time
+}
+
 func NewAudit(requestType int, url string, ResponseTime time.Duration) *Audit {
 	auditId := base.NewUUID()
 

@@ -16,28 +16,21 @@ func NewAuditService(repo repository.Audit) *AuditService {
 	return &AuditService{auditRepo: repo}
 }
 
-func (s *AuditService) Create(ctx context.Context, requestType int, url string, ResponseTime time.Duration) (*audit.Audit, error) {
+func (s *AuditService) Create(ctx context.Context, requestType int, url string, ResponseTime time.Duration) error {
 	newUser := audit.NewAudit(requestType, url, ResponseTime)
 
 	err := s.auditRepo.Create(ctx, newUser)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return newUser, nil
+	return nil
 }
 
 func (s *AuditService) GetAll(ctx context.Context) ([]*audit.MongoAuditGroup, error) {
 	return s.auditRepo.Find(ctx)
 }
 
-func (s *AuditService) GetByRequestType(ctx context.Context, requestType int) ([]*audit.Audit, error) {
+func (s *AuditService) GetByRequestType(ctx context.Context, requestType int) ([]*audit.MongoAuditResp, error) {
 	return s.auditRepo.FindByRequestType(ctx, requestType)
-}
-
-func (s *AuditService) Login(ctx context.Context, email, password string) (string, error) {
-	if email == "admin@gmail.com" && password == "admin" {
-		return "admin", nil
-	}
-	return "", nil
 }

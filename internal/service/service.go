@@ -13,9 +13,9 @@ import (
 )
 
 type Audit interface {
-	Create(ctx context.Context, requestType int, url string, ResponseTime time.Duration) (*audit.Audit, error)
+	Create(ctx context.Context, requestType int, url string, ResponseTime time.Duration) error
 	GetAll(ctx context.Context) ([]*audit.MongoAuditGroup, error)
-	GetByRequestType(ctx context.Context, requestType int) ([]*audit.Audit, error)
+	GetByRequestType(ctx context.Context, requestType int) ([]*audit.MongoAuditResp, error)
 }
 
 type Results interface {

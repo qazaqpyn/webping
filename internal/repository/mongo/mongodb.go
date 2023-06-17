@@ -3,6 +3,7 @@ package mongo
 import (
 	"context"
 	"errors"
+	"log"
 	"os"
 	"time"
 
@@ -13,12 +14,12 @@ import (
 
 func NewMongodb(db string) (*mongo.Database, error) {
 	if err := godotenv.Load(); err != nil {
-		return nil, errors.New("No .env file found\n")
+		return nil, errors.New("no .env file found")
 	}
 
 	uri := os.Getenv("MONGODB_URI")
 	if uri == "" {
-		return nil, errors.New("You must set your 'MONGODB_URI' environmental variable\n")
+		return nil, errors.New("you must set your 'MONGODB_URI' environmental variable")
 	}
 
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
@@ -30,6 +31,7 @@ func NewMongodb(db string) (*mongo.Database, error) {
 	defer cancel()
 
 	err = client.Ping(ctx, nil)
+	log.Print(err)
 	if err != nil {
 		return nil, err
 	}

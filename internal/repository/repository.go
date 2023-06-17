@@ -13,7 +13,7 @@ import (
 type Audit interface {
 	Create(ctx context.Context, audit *audit.Audit) error
 	Find(ctx context.Context) ([]*audit.MongoAuditGroup, error)
-	FindByRequestType(ctx context.Context, requestType int) ([]*audit.Audit, error)
+	FindByRequestType(ctx context.Context, requestType int) ([]*audit.MongoAuditResp, error)
 }
 
 type Results interface {
@@ -30,7 +30,7 @@ type Repository struct {
 
 func NewRepository(client *mongo.Database) *Repository {
 	return &Repository{
-		Audit:   auditMongo.NewRepoAudit(client, viper.GetString("mongodb.audit")),
+		Audit:   auditMongo.NewRepoAudit(client, viper.GetString("mongo.audit")),
 		Results: results.NewResults(),
 	}
 }

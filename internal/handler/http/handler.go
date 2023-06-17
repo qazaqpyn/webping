@@ -17,7 +17,7 @@ type Handler struct {
 func NewHandler(services *service.Service, websites *websites.Websites) *Handler {
 	return &Handler{
 		Admin:  admin.NewHttpDelivery(services.Audit, services.Auth),
-		Public: public.NewHttpDelivery(services.Results, websites),
+		Public: public.NewHttpDelivery(services.Results, websites, services.Audit),
 	}
 }
 
@@ -27,6 +27,9 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	api := router.Group("/api")
 	{
 		api.POST("/login", h.Admin.Login)
+		api.POST("/requestTime", h.Public.GetRequestTime)
+		api.POST("/maxResponseTime", h.Public.GetMaxResponseTime)
+		api.POST("/minResponseTime", h.Public.GetMinResponseTime)
 
 		authentication := api.Group("/admin")
 		authentication.Use(middleware.AdminIdentityMiddleware(h.Admin.AuthService))
@@ -36,10 +39,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			authentication.GET("/minList", h.Admin.GetMinList)
 			authentication.GET("/maxList", h.Admin.GetMaxList)
 		}
-
-		api.POST("/requestTime", h.Public.GetRequestTime)
-		api.POST("/maxResponseTime", h.Public.GetMaxResponseTime)
-		api.POST("/minResponseTime", h.Public.GetMinResponseTime)
 	}
 	return router
 }

@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -36,16 +36,10 @@ func (h *HttpDelivery) Login(c *gin.Context) {
 		return
 	}
 
-	data, err := json.Marshal(map[string]string{
+	c.Header("Content-Type", "application/json")
+	c.JSON(http.StatusOK, map[string]string{
 		"token": token,
 	})
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, response.ErrorResponse(err.Error()))
-		return
-	}
-
-	c.Header("Content-Type", "application/json")
-	c.JSON(http.StatusOK, data)
 }
 
 func (h *HttpDelivery) GetWebList(c *gin.Context) {
@@ -55,16 +49,10 @@ func (h *HttpDelivery) GetWebList(c *gin.Context) {
 		return
 	}
 
-	data, err := json.Marshal(map[string]interface{}{
+	c.Header("Content-Type", "application/json")
+	c.JSON(http.StatusOK, map[string]interface{}{
 		"data": stat,
 	})
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, response.ErrorResponse(err.Error()))
-		return
-	}
-
-	c.Header("Content-Type", "application/json")
-	c.JSON(http.StatusOK, data)
 }
 
 func (h *HttpDelivery) GetMinList(c *gin.Context) {
@@ -74,16 +62,10 @@ func (h *HttpDelivery) GetMinList(c *gin.Context) {
 		return
 	}
 
-	data, err := json.Marshal(map[string]interface{}{
+	c.Header("Content-Type", "application/json")
+	c.JSON(http.StatusOK, map[string]interface{}{
 		"data": stat,
 	})
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, response.ErrorResponse(err.Error()))
-		return
-	}
-
-	c.Header("Content-Type", "application/json")
-	c.JSON(http.StatusOK, data)
 }
 
 func (h *HttpDelivery) GetMaxList(c *gin.Context) {
@@ -93,33 +75,22 @@ func (h *HttpDelivery) GetMaxList(c *gin.Context) {
 		return
 	}
 
-	data, err := json.Marshal(map[string]interface{}{
+	c.Header("Content-Type", "application/json")
+	c.JSON(http.StatusOK, map[string]interface{}{
 		"data": stat,
 	})
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, response.ErrorResponse(err.Error()))
-		return
-	}
-
-	c.Header("Content-Type", "application/json")
-	c.JSON(http.StatusOK, data)
 }
 
 func (h *HttpDelivery) GetAllStatistics(c *gin.Context) {
 	stat, err := h.auditService.GetAll(c)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, response.ErrorResponse(err.Error()))
-		return
-	}
-
-	data, err := json.Marshal(map[string]interface{}{
-		"data": stat,
-	})
+	log.Println(stat, err)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, response.ErrorResponse(err.Error()))
 		return
 	}
 
 	c.Header("Content-Type", "application/json")
-	c.JSON(http.StatusOK, data)
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"data": stat,
+	})
 }

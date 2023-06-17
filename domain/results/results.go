@@ -46,8 +46,10 @@ func (r *Results) GetResult(url string) Result {
 }
 
 func (r *Results) MaxResponseTime() (url string, result Result) {
+	max := time.Second * 0
 	for k, v := range r.Results {
-		if result.ResponseTime < v.ResponseTime {
+		if max < v.ResponseTime && v.Error == nil {
+			max = v.ResponseTime
 			url = k
 			result = v
 		}
@@ -56,8 +58,10 @@ func (r *Results) MaxResponseTime() (url string, result Result) {
 }
 
 func (r *Results) MinResponseTime() (url string, result Result) {
+	min := time.Hour
 	for k, v := range r.Results {
-		if result.ResponseTime > v.ResponseTime {
+		if min > v.ResponseTime && v.Error == nil {
+			min = v.ResponseTime
 			url = k
 			result = v
 		}

@@ -1,7 +1,7 @@
 # webping
 A program that checks the list of sites for availability.
 
-Once a minute, it checks whether the sites from the list are available and notes the time of access to them.
+Once a minute, it checks whether the sites from the list are available with worker pool in the background and locally notes the time of access to them.
 Users have 3 query options (endpoints):
 1. Get access time to a specific site.
 2. Get the name of the site with the minimum access time.
